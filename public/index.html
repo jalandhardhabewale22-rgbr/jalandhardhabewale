@@ -14,16 +14,142 @@
     href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style id="admin-bar-css">
+    .admin-bar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      z-index: 45;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 8px 8px 14px;
+      border-radius: 16px;
+      background: rgba(18, 14, 10, .94);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 179, 31, .42);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .55);
+      width: max-content;
+      max-width: calc(100vw - 20px);
+      animation: abIn .45s cubic-bezier(.2, .8, .2, 1)
+    }
+
+    .admin-bar[hidden] {
+      display: none
+    }
+
+    @keyframes abIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 24px)
+      }
+    }
+
+    .admin-bar .ab-lbl {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffb31f;
+      white-space: nowrap
+    }
+
+    .admin-bar .ab-lbl i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3dbe6c;
+      box-shadow: 0 0 0 0 rgba(61, 190, 108, .6);
+      animation: abPulse 1.8s infinite
+    }
+
+    @keyframes abPulse {
+
+      70%,
+      100% {
+        box-shadow: 0 0 0 7px rgba(61, 190, 108, 0)
+      }
+    }
+
+    .admin-bar button {
+      border: 1px solid rgba(255, 239, 213, .18);
+      background: rgba(255, 255, 255, .06);
+      color: #fff4e2;
+      border-radius: 11px;
+      padding: 9px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform .2s, border-color .2s, background .2s
+    }
+
+    .admin-bar button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 179, 31, .6)
+    }
+
+    .admin-bar #backPanel {
+      background: linear-gradient(90deg, #ffb31f, #ff7518);
+      color: #1c1000;
+      border-color: transparent
+    }
+
+    .admin-bar #adminOut {
+      color: #ff9d9d;
+      border-color: rgba(255, 120, 120, .4)
+    }
+
+    body.admin-on .fab,
+    body.admin-on .fab2 {
+      bottom: calc(76px + env(safe-area-inset-bottom, 0px))
+    }
+
+    body.admin-on .toast {
+      bottom: 84px
+    }
+
+    body.admin-on {
+      padding-bottom: 150px
+    }
+
+    @media(max-width:430px) {
+      .admin-bar .ab-lbl {
+        display: none
+      }
+
+      .admin-bar {
+        padding: 8px
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      .admin-bar,
+      .admin-bar .ab-lbl i {
+        animation: none
+      }
+    }
+  </style>
 </head>
 
 <body>
   <header class="hero">
     <button class="langbtn" id="langBtn" hidden></button>
     <button class="adminbtn" id="adminBtn">Admin</button>
-
-    <img class="cup" src="/logo.jpeg" alt="Jalandhar Dhabe Wale logo"
-      style="width: 104px; height: 95px; object-fit: contain;" />
-
+    <svg class="cup" viewBox="0 0 120 110" width="104" height="95" aria-hidden="true">
+      <g class="steam" fill="none" stroke="#FFB11F" stroke-width="3" stroke-linecap="round">
+        <path d="M44 42c-7-8 7-12 0-24" />
+        <path d="M60 42c-7-8 7-12 0-24" style="animation-delay:.6s" />
+        <path d="M76 42c-7-8 7-12 0-24" style="animation-delay:1.2s" />
+      </g>
+      <path d="M30 52h60v18a30 30 0 0 1-60 0z" fill="#FFB11F" />
+      <path d="M90 58h8a10 10 0 0 1 0 20h-10" fill="none" stroke="#FFB11F" stroke-width="5" />
+      <ellipse cx="60" cy="103" rx="42" ry="4.5" fill="#FFB11F" opacity=".25" />
+    </svg>
     <h1 id="title"></h1>
     <p class="tag" id="tag"></p>
     <span class="tbl" id="tbl" hidden></span>
@@ -56,6 +182,9 @@
   <button class="fab2" id="qrBtn" hidden>QR codes</button>
   <button class="fab" id="fab" hidden>Add item</button>
   <div class="toast" id="toast" role="status"></div>
+  <div class="admin-bar" id="adminBar" role="region" aria-label="Admin controls" hidden><span
+      class="ab-lbl"><i></i>Admin mode</span><button type="button" id="backPanel">← Back to panel</button><button
+      type="button" id="adminOut">Log out</button></div>
   <div class="cartbar" id="cartbar" hidden><button id="cartOpen"><span id="cartN"></span><span>View order · <span
           id="cartTotal"></span></span></button></div>
   <dialog id="orderDlg">
@@ -73,6 +202,7 @@
       final amount.</p>
     <div style="display:grid;gap:10px"><input id="oName" placeholder="Your name (optional)"><input id="oNote"
         placeholder="Note, e.g. less spicy (optional)">
+      <p class="msg" id="waErr" role="alert" hidden></p>
       <button class="btn wa" id="waSend" type="button">Send order on WhatsApp</button>
       <div class="row"><a class="btn" id="orderCall"
           style="flex:1;text-align:center;text-decoration:none;color:inherit">Call instead</a><button class="btn"
@@ -143,7 +273,7 @@
     let cart = {}; try { cart = JSON.parse(localStorage.getItem("qr-menu-cart") || sessionStorage.getItem("cart") || "{}") } catch (e) { cart = {} }
     const canAdd = m => !!m.available;
     const qty = id => cart[id] || 0;
-    const WA = () => String(CFG.whatsapp || "").replace(/\D/g, "");
+    const WA = () => { let d = String(CFG.whatsapp || "").replace(/\D/g, ""); if (d.startsWith("00")) d = d.slice(2); return d.startsWith("0") || d.length < 8 ? "" : d };
     const addInner = id => qty(id) ? `<button class="stp" data-q="${esc(id)}" data-d="-1" aria-label="Remove one">−</button><b>${qty(id)}</b><button class="stp" data-q="${esc(id)}" data-d="1" aria-label="Add one">+</button>` : `<button class="addbtn" data-a="${esc(id)}">+ Add</button>`;
     const lines = () => Object.entries(cart).map(([id, q]) => ({ m: menu.find(x => x.id === id), q })).filter(x => x.m && canAdd(x.m));
     const total = () => Math.round(lines().reduce((a, { m, q }) => a + (m.price || 0) * q, 0) * 100) / 100;
@@ -168,12 +298,14 @@
     $("orderList").onclick = e => { const remove = e.target.closest("[data-remove]"); if (remove) { setQty(remove.dataset.remove, 0); return } const q = e.target.closest("[data-q]"); if (q) setQty(q.dataset.q, qty(q.dataset.q) + +q.dataset.d) };
     $("waSend").onclick = () => {
       const L = lines(); if (!L.length) return;
-      if (!WA()) { toast("Restaurant WhatsApp number is not configured"); return }
+      const showWaErr = m => { $("waErr").textContent = m; $("waErr").hidden = !m };
+      if (!WA()) { showWaErr("WhatsApp ordering is not set up yet. Please call the shop to place your order."); return }
+      showWaErr("");
       let t = `Hi ${CFG.name || ""}! I'd like to order:\n` + L.map(({ m, q }) => `• ${q} × ${nmOf(m)}${m.price == null ? (m.priceLabel === "Included" ? " (included)" : " (price on request)") : " — " + CUR + money(Math.round(m.price * q * 100) / 100)}`).join("\n") + `\nTotal: ${CUR}${money(total())}` + (L.some(x => x.m.price == null && x.m.priceLabel !== "Included") ? " + items priced on request" : "");
       if (TABLE) t += `\nTable: ${TABLE}`;
       const nm = $("oName").value.trim(), nt = $("oNote").value.trim();
       if (nm) t += `\nName: ${nm}`; if (nt) t += `\nNote: ${nt}`;
-      window.open(`https://wa.me/${WA()}?text=${encodeURIComponent(t)}`, "_blank", "noopener");
+      const a = document.createElement("a"); a.href = `https://wa.me/${WA()}?text=${encodeURIComponent(t)}`; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
     };
     function setupCTA() {
       const ph = String(CFG.phone || "").replace(/[^\d+]/g, "");
@@ -205,7 +337,7 @@
     }
     function render() {
       const adm = !!token;
-      $("adminBtn").textContent = adm ? "Log out" : "Admin"; $("adminBtn").classList.toggle("on", adm);
+      $("adminBtn").textContent = adm ? "Log out" : "Admin"; $("adminBtn").classList.toggle("on", adm); $("adminBar").hidden = !adm; document.body.classList.toggle("admin-on", adm);
       $("fab").hidden = $("qrBtn").hidden = !adm;
       $("alt").hidden = !(CFG.lang2 && adm);
       $("cats").innerHTML = [...new Set(menu.map(m => m.category))].map(c => `<option value="${esc(c)}">`).join("");
@@ -236,6 +368,8 @@
     $("veg").onclick = e => { veg = !veg; e.currentTarget.setAttribute("aria-pressed", veg); render() };
     $("langBtn").onclick = () => { L2 = !L2; $("langBtn").textContent = L2 ? "English" : CFG.lang2; render() };
     document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+    $("backPanel").onclick = () => { try { sessionStorage.setItem("adminNav", "1") } catch (e) { } location.href = "/admin" };
+    $("adminOut").onclick = async () => { try { if (token) await fetch("/api/logout", { method: "POST", headers: { "x-token": token } }) } catch (e) { } token = ""; try { sessionStorage.removeItem("tk"); sessionStorage.removeItem("adminNav") } catch (e) { } render(); toast("Logged out") };
     $("adminBtn").onclick = () => {
       if (token) { token = ""; sessionStorage.removeItem("tk"); render(); toast("Logged out") }
       else { $("lmsg").textContent = ""; $("pw").value = ""; $("loginDlg").showModal(); $("pw").focus() }

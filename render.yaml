@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: qr-menu
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: RESTAURANT_NAME
+        sync: false
+      - key: RESTAURANT_TAGLINE
+        sync: false
+      - key: CURRENCY
+        sync: false
+      - key: RESTAURANT_PHONE
+        sync: false
+      - key: RESTAURANT_LOCATION
+        sync: false
+      - key: WHATSAPP_NUMBER
+        sync: false
+      - key: INSTAGRAM
+        sync: false
+      - key: GOOGLE_REVIEW
+        sync: false
+      - key: LANG2
+        sync: false
+      - key: WEEK1_START
+        sync: false
+      - key: TICKER_TEXT
+        sync: false
+    disk:
+      name: qr-menu-data
+      mountPath: /var/data
+      sizeGB: 1

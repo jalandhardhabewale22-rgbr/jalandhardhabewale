@@ -1,1 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#100b08">
+  <meta name="description"
+    content="Explore the menu at Jalandhar Dhabe Wale. Fresh Punjabi flavours, tiffin plans and takeaway.">
+  <title>Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="hero">
+    <button class="langbtn" id="langBtn" hidden></button>
+    <button class="adminbtn" id="adminBtn">Admin</button>
+
+    <img class="cup" src="/logo.jpeg" alt="Jalandhar Dhabe Wale logo"
+      style="width: 104px; height: 95px; object-fit: contain;" />
+
+    <h1 id="title"></h1>
+    <p class="tag" id="tag"></p>
+    <span class="tbl" id="tbl" hidden></span>
+    <div class="cta"><a class="cbtn pri" id="callBtn" hidden>📞 Call to order</a><a class="cbtn" id="waBtn"
+        target="_blank" rel="noopener" hidden>💬 WhatsApp</a></div>
+  </header>
+  <div class="ticker" id="ticker" hidden>
+    <div class="track" id="track"></div>
+  </div>
+  <div class="bar" id="bar">
+    <div class="in">
+      <div class="tools">
+        <label class="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg><input id="q" placeholder="Search the menu" aria-label="Search the menu"></label>
+        <button class="vegtog" id="veg" aria-pressed="false"><span class="trk"></span>Veg only</button>
+      </div>
+      <nav class="tabs" id="tabs" aria-label="Menu categories"></nav>
+    </div>
+  </div>
+  <section class="today" id="today" hidden></section>
+  <main id="list">
+    <div class="sk"></div>
+    <div class="sk"></div>
+    <div class="sk"></div>
+  </main>
+  <footer id="foot"></footer>
+  <button class="fab2" id="qrBtn" hidden>QR codes</button>
+  <button class="fab" id="fab" hidden>Add item</button>
+  <div class="toast" id="toast" role="status"></div>
+  <div class="cartbar" id="cartbar" hidden><button id="cartOpen"><span id="cartN"></span><span>View order · <span
+          id="cartTotal"></span></span></button></div>
+  <dialog id="orderDlg">
+    <div class="cart-head">
+      <div>
+        <h3>Your cart</h3>
+        <p class="cart-sub">Review your items before placing the order.</p>
+      </div><button class="cart-clear" id="cartClear" type="button">Clear cart</button>
+    </div>
+    <div id="cartEmpty" class="cart-empty" hidden><span>🛒</span><b>Your cart is empty</b><small>Add dishes from the
+        menu to get started.</small></div>
+    <div id="orderList"></div>
+    <div class="otot"><span>Total</span><span id="orderTotal"></span></div>
+    <p id="cartPriceNote" class="cart-price-note" hidden>Some items have no set price. The restaurant will confirm the
+      final amount.</p>
+    <div style="display:grid;gap:10px"><input id="oName" placeholder="Your name (optional)"><input id="oNote"
+        placeholder="Note, e.g. less spicy (optional)">
+      <button class="btn wa" id="waSend" type="button">Send order on WhatsApp</button>
+      <div class="row"><a class="btn" id="orderCall"
+          style="flex:1;text-align:center;text-decoration:none;color:inherit">Call instead</a><button class="btn"
+          type="button" id="orderClose" style="flex:1">Close</button></div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin:10px 0 0">The shop will confirm your order on WhatsApp.</p>
+  </dialog>
+  <input type="file" id="qp" accept="image/*" hidden>
+  <dialog id="imgDlg"><img id="bigImg" alt="">
+    <div class="cap" id="bigCap"></div>
+  </dialog>
+
+  <dialog id="loginDlg">
+    <h3>Admin login</h3>
+    <form id="loginForm" method="dialog"><input id="pw" type="password" placeholder="Password"
+        autocomplete="current-password" required>
+      <div class="msg" id="lmsg"></div>
+      <div class="row"><button class="btn pri" type="submit">Log in</button><button class="btn" type="button"
+          data-close>Cancel</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="addDlg">
+    <h3 id="addTitle">Add item</h3>
+    <form id="addForm" method="dialog"><input id="name" placeholder="Dish name" required><input id="desc"
+        placeholder="Description (optional)">
+      <div id="alt" hidden style="display:grid;gap:10px"><input id="name2" placeholder="Dish name (2nd language)"><input
+          id="desc2" placeholder="Description (2nd language)"></div>
+      <div class="row"><input id="price" type="number" step="any" min="0" placeholder="Price (empty = included)"
+          style="flex:1"><input id="cat" list="cats" placeholder="Category" required style="flex:1.4"></div><datalist
+        id="cats"></datalist>
+      <div class="opts" id="tagBox"></div>
+      <div class="opts"><label class="opt"><input type="checkbox" id="isveg" checked> Vegetarian</label><label
+          class="opt"><input type="checkbox" id="isspecial"> Chef's pick</label></div>
+      <label style="font-size:13px;color:var(--muted)">Photo (optional)<input type="file" id="photo" accept="image/*"
+          style="margin-top:6px"></label>
+      <label class="opt" id="rmWrap" hidden><input type="checkbox" id="rmPhoto"> Remove current photo</label>
+      <div class="msg" id="amsg"></div>
+      <div class="row"><button class="btn pri" type="submit" id="addGo">Add item</button><button class="btn"
+          type="button" data-close>Cancel</button></div>
+    </form>
+  </dialog>
+
+  <div id="qrView" hidden>
+    <div class="qtools noprint">
+      <input id="base" aria-label="Website address" style="flex:1;min-width:200px">
+      <input id="tn" type="number" min="1" max="60" value="10" aria-label="Number of tables" style="width:90px">
+      <button class="btn pri" id="qrGen">Make QR codes</button><button class="btn" id="qrPrint">Print</button><button
+        class="btn" id="qrClose">Close</button>
+    </div>
+    <p class="noprint" id="qrStat" style="color:#666;font-size:14px;margin:0 0 14px"></p>
+    <div id="qrSheet"></div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    let editId = null, pendingId = null, menu = [], veg = false, term = "", intro = true, L2 = false, CFG = {}, CUR = "", token = sessionStorage.getItem("tk") || "", io, rvo;
+    const TABLE = (new URLSearchParams(location.search).get("table") || "").replace(/[^\w-]/g, "").slice(0, 10);
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const api = (url, method = "GET", body) => fetch(url, { method, headers: { "Content-Type": "application/json", "x-token": token }, body: body && JSON.stringify(body) }).then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || "Something went wrong"); return d });
+    const TAGS = { gluten: "🌾 Gluten", nuts: "🥜 Nuts", dairy: "🥛 Dairy", spicy: "🌶️ Spicy", vegan: "🌱 Vegan" };
+    const E = [["chef", "⭐"], ["tiffin", "🍱"], ["soup", "🍲"], ["curries", "🍛"], ["paratha", "🫓"], ["pakora", "🧆"], ["bhatura", "🫓"], ["protein", "🍗"], ["week", "📅"], ["chai", "🫖"], ["tea", "🍵"], ["coffee", "☕"], ["shake", "🥤"], ["drink", "🥤"], ["beverage", "🥤"], ["burger", "🍔"], ["sandwich", "🥪"], ["pizza", "🍕"], ["fries", "🍟"], ["snack", "🍟"], ["starter", "🍢"], ["main", "🍛"], ["bread", "🫓"], ["rice", "🍚"], ["biryani", "🍚"], ["dessert", "🍮"], ["sweet", "🍮"], ["maggi", "🍜"], ["noodle", "🍜"], ["pasta", "🍝"], ["breakfast", "🍳"]];
+    const ico = c => { c = c.toLowerCase(); return (E.find(([k]) => c.includes(k)) || [0, "🍽️"])[1] };
+    let tt; const toast = m => { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2200) };
+    $("tagBox").innerHTML = Object.entries(TAGS).map(([k, v]) => `<label class="opt"><input type="checkbox" value="${k}"> ${v}</label>`).join("");
+    const money = p => Number.isInteger(+p) ? String(+p) : (+p).toFixed(2);
+    /* ordering */
+    let cart = {}; try { cart = JSON.parse(localStorage.getItem("qr-menu-cart") || sessionStorage.getItem("cart") || "{}") } catch (e) { cart = {} }
+    const canAdd = m => !!m.available;
+    const qty = id => cart[id] || 0;
+    const WA = () => String(CFG.whatsapp || "").replace(/\D/g, "");
+    const addInner = id => qty(id) ? `<button class="stp" data-q="${esc(id)}" data-d="-1" aria-label="Remove one">−</button><b>${qty(id)}</b><button class="stp" data-q="${esc(id)}" data-d="1" aria-label="Add one">+</button>` : `<button class="addbtn" data-a="${esc(id)}">+ Add</button>`;
+    const lines = () => Object.entries(cart).map(([id, q]) => ({ m: menu.find(x => x.id === id), q })).filter(x => x.m && canAdd(x.m));
+    const total = () => Math.round(lines().reduce((a, { m, q }) => a + (m.price || 0) * q, 0) * 100) / 100;
+    function setQty(id, n) {
+      n = Math.max(0, Math.min(20, n)); if (n) cart[id] = n; else delete cart[id];
+      try { localStorage.setItem("qr-menu-cart", JSON.stringify(cart)); sessionStorage.setItem("cart", JSON.stringify(cart)) } catch (e) { }
+      document.querySelectorAll('.add[data-id="' + id + '"]').forEach(el => { el.innerHTML = addInner(id) });
+      updateBar(); if ($("orderDlg").open) renderOrder();
+    }
+    function updateBar() { const n = lines().reduce((a, x) => a + x.q, 0); $("cartbar").hidden = !(n && !token); $("cartN").textContent = n + (n === 1 ? " item" : " items"); $("cartTotal").textContent = CUR + money(total()) }
+    function renderOrder() {
+      const L = lines();
+      $("cartEmpty").hidden = !!L.length;
+      $("orderList").hidden = !L.length;
+      $("orderList").innerHTML = L.map(({ m, q }) => `<div class="ol"><div class="ol-info"><b>${esc(nmOf(m))}</b><small>${m.price == null ? esc(m.priceLabel || "Price on request") : esc(CUR) + money(m.price) + " each"}</small><strong class="line-total">${m.price == null ? "—" : esc(CUR) + money(Math.round(m.price * q * 100) / 100)}</strong></div><div class="add" data-id="${esc(m.id)}">${addInner(m.id)}</div><button class="remove-line" type="button" data-remove="${esc(m.id)}" aria-label="Remove ${esc(nmOf(m))}">×</button></div>`).join("");
+      $("orderTotal").textContent = CUR + money(total());
+      $("cartPriceNote").hidden = !L.some(x => x.m.price == null && x.m.priceLabel !== "Included");
+    }
+    $("cartOpen").onclick = () => { renderOrder(); $("orderDlg").showModal() };
+    $("cartClear").onclick = () => { cart = {}; try { localStorage.removeItem("qr-menu-cart"); sessionStorage.removeItem("cart") } catch (e) { }; document.querySelectorAll(".add[data-id]").forEach(el => { el.innerHTML = addInner(el.dataset.id) }); updateBar(); renderOrder(); toast("Cart cleared") };
+    $("orderClose").onclick = () => $("orderDlg").close();
+    $("orderList").onclick = e => { const remove = e.target.closest("[data-remove]"); if (remove) { setQty(remove.dataset.remove, 0); return } const q = e.target.closest("[data-q]"); if (q) setQty(q.dataset.q, qty(q.dataset.q) + +q.dataset.d) };
+    $("waSend").onclick = () => {
+      const L = lines(); if (!L.length) return;
+      if (!WA()) { toast("Restaurant WhatsApp number is not configured"); return }
+      let t = `Hi ${CFG.name || ""}! I'd like to order:\n` + L.map(({ m, q }) => `• ${q} × ${nmOf(m)}${m.price == null ? (m.priceLabel === "Included" ? " (included)" : " (price on request)") : " — " + CUR + money(Math.round(m.price * q * 100) / 100)}`).join("\n") + `\nTotal: ${CUR}${money(total())}` + (L.some(x => x.m.price == null && x.m.priceLabel !== "Included") ? " + items priced on request" : "");
+      if (TABLE) t += `\nTable: ${TABLE}`;
+      const nm = $("oName").value.trim(), nt = $("oNote").value.trim();
+      if (nm) t += `\nName: ${nm}`; if (nt) t += `\nNote: ${nt}`;
+      window.open(`https://wa.me/${WA()}?text=${encodeURIComponent(t)}`, "_blank", "noopener");
+    };
+    function setupCTA() {
+      const ph = String(CFG.phone || "").replace(/[^\d+]/g, "");
+      $("orderCall").hidden = !ph; if (ph) { $("callBtn").href = "tel:" + ph; $("callBtn").hidden = false; $("orderCall").href = "tel:" + ph }
+      if (WA()) { $("waBtn").href = `https://wa.me/${WA()}?text=${encodeURIComponent("Hi! I'd like to order from the menu.")}`; $("waBtn").hidden = false }
+    }
+    function renderToday() {
+      const el = $("today"), n = new Date(), D = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], day = D[n.getDay()];
+      let main = "";
+      if (CFG.week1Start) {
+        const s0 = new Date(CFG.week1Start + "T00:00:00"), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+        const w = (((Math.floor(Math.round((t0 - s0) / 864e5) / 7)) % 2) + 2) % 2 ? 2 : 1;
+        const it = menu.find(m => m.category === "Tiffin Week " + w && m.name === day);
+        if (it) main = it.desc === "No tiffin" ? "No tiffin today" : it.desc;
+      }
+      const sw = menu.find(m => m.category === "Sweet of the Day" && (m.desc || "").includes("Every " + day));
+      const wk = ["Friday", "Saturday", "Sunday"].includes(day) ? menu.filter(m => /^Weekend (Soups|Curries)/.test(m.category) && m.available) : [];
+      if (!main && !sw && !wk.length) { el.hidden = true; return }
+      el.innerHTML = `<div class="tl"><span class="live"></span>Today · ${day}</div>` + (main ? `<h2>Today's tiffin</h2><p>${esc(main)}</p>` : `<h2>On the menu today</h2>`) + `<div class="tchips">` + (sw ? `<span>🍮 ${esc(sw.name)} today</span>` : "") + (wk.length ? `<span>🍲 ${wk.map(m => esc(m.name)).join(" · ")} available</span>` : "") + `</div>`;
+      el.hidden = false;
+    }
+    const nmOf = m => L2 && m.name2 ? m.name2 : m.name, dsOf = m => L2 && m.desc2 ? m.desc2 : m.desc;
+
+    function card(m, d, adm) {
+      const ctrl = adm ? `<div class="ctrl"><button class="sm" data-e="${esc(m.id)}">Edit</button><button class="sm" data-p="${esc(m.id)}">${m.img ? "Change photo" : "Add photo"}</button><button class="sm" data-t="${esc(m.id)}">${m.available ? "Mark sold out" : "Mark available"}</button><button class="sm del" data-d="${esc(m.id)}">Delete</button></div>` : "";
+      const pills = (m.tags || []).map(t => TAGS[t] ? `<span class="pill">${TAGS[t]}</span>` : "").join("") + (m.special ? `<span class="pill star">★ Chef's pick</span>` : "");
+      const tile = m.img ? `<img class="tile ph" src="${esc(m.img)}" alt="${esc(m.name)}" loading="lazy" decoding="async">` : (/^Tiffin Week/.test(m.category) ? `<div class="tile day">${esc(m.name.slice(0, 3))}</div>` : `<div class="tile">${ico(m.category)}</div>`);
+      return `<article class="card ${m.available ? "" : "off"} rv" style="--d:${d}">${tile}<div class="info"><div class="nm"><i class="vm ${m.veg ? "v" : "n"}" title="${m.veg ? "Vegetarian" : "Non-vegetarian"}"></i><h3>${esc(nmOf(m))}</h3></div>${dsOf(m) ? `<p>${esc(dsOf(m))}</p>` : ""}${pills ? `<div class="pills">${pills}</div>` : ""}${adm || !canAdd(m) ? "" : `<div class="add" data-id="${esc(m.id)}">${addInner(m.id)}</div>`}${ctrl}</div><div class="pr">${m.available ? (m.price == null ? (m.priceLabel ? `<span class="inc">${esc(m.priceLabel)}</span>` : "") : `<small>${esc(CUR)}</small>${money(m.price)}`) : '<span class="so">Sold out</span>'}</div></article>`;
+    }
+    function render() {
+      const adm = !!token;
+      $("adminBtn").textContent = adm ? "Log out" : "Admin"; $("adminBtn").classList.toggle("on", adm);
+      $("fab").hidden = $("qrBtn").hidden = !adm;
+      $("alt").hidden = !(CFG.lang2 && adm);
+      $("cats").innerHTML = [...new Set(menu.map(m => m.category))].map(c => `<option value="${esc(c)}">`).join("");
+      const items = menu.filter(m => (!veg || m.veg) && [m.name, m.desc, m.name2, m.desc2, m.category, (m.tags || []).join(" ")].join(" ").toLowerCase().includes(term));
+      const groups = []; items.forEach(m => { let g = groups.find(x => x.c === m.category); if (!g) groups.push(g = { c: m.category, items: [] }); g.items.push(m) });
+      const sp = items.filter(m => m.special); if (sp.length) groups.unshift({ c: "Chef's picks", items: sp });
+      if (io) io.disconnect();
+      if (!groups.length) { $("tabs").innerHTML = ""; $("list").innerHTML = '<div class="empty"><b>No dishes found</b>Try another word, or turn off Veg only.</div>'; return }
+      $("tabs").innerHTML = groups.map((g, i) => `<button class="chip" data-i="${i}">${ico(g.c)} ${esc(g.c)}</button>`).join("");
+      let n = 0;
+      $("list").innerHTML = groups.map((g, i) => `<section class="sec" id="sec-${i}"><h2>${ico(g.c)} ${esc(g.c)}<small>${g.items.length}</small></h2><div class="grid">${g.items.map(m => card(m, Math.min(n++, 10), adm)).join("")}</div></section>`).join("");
+      intro = false;
+      io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(+e.target.id.slice(4)) }), { rootMargin: "-30% 0px -60% 0px" });
+      document.querySelectorAll(".sec").forEach(s => io.observe(s));
+      if (rvo) rvo.disconnect(); rvo = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("shown"); rvo.unobserve(e.target) } }), { threshold: .1 });
+      document.querySelectorAll(".card.rv").forEach(c => rvo.observe(c));
+      setActive(0); updateBar();
+    }
+    function setActive(i) {
+      const bs = [...$("tabs").children]; bs.forEach((b, k) => b.classList.toggle("on", k === i));
+      const b = bs[i]; if (b && $("tabs").scrollWidth > $("tabs").clientWidth + 2) $("tabs").scrollTo({ left: b.offsetLeft - $("tabs").clientWidth / 2 + b.offsetWidth / 2, behavior: "smooth" });
+    }
+    async function loadMenu() { menu = await fetch("/api/menu").then(r => r.json()); render(); renderToday() }
+    const shrink = f => new Promise((res, rej) => { const im = new Image(); im.onload = () => { const s = Math.min(1, 640 / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = im.width * s; c.height = im.height * s; c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(b => b ? res(b) : rej(new Error("Photo could not be read")), "image/jpeg", .8) }; im.onerror = () => rej(new Error("Photo could not be read")); im.src = URL.createObjectURL(f) });
+
+    $("tabs").onclick = e => { const b = e.target.closest(".chip"); if (b) $("sec-" + b.dataset.i).scrollIntoView({ behavior: "smooth" }) };
+    $("q").oninput = e => { term = e.target.value.trim().toLowerCase(); render() };
+    $("veg").onclick = e => { veg = !veg; e.currentTarget.setAttribute("aria-pressed", veg); render() };
+    $("langBtn").onclick = () => { L2 = !L2; $("langBtn").textContent = L2 ? "English" : CFG.lang2; render() };
+    document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+    $("adminBtn").onclick = () => {
+      if (token) { token = ""; sessionStorage.removeItem("tk"); render(); toast("Logged out") }
+      else { $("lmsg").textContent = ""; $("pw").value = ""; $("loginDlg").showModal(); $("pw").focus() }
+    };
+    $("loginForm").onsubmit = async e => {
+      e.preventDefault();
+      try { const d = await api("/api/login", "POST", { password: $("pw").value }); token = d.token; sessionStorage.setItem("tk", token); $("loginDlg").close(); render(); toast("Admin mode on") }
+      catch (x) { $("lmsg").textContent = x.message }
+    };
+    function openForm(m) {
+      editId = m ? m.id : null; $("addForm").reset(); $("amsg").textContent = "";
+      $("addTitle").textContent = m ? "Edit item" : "Add item"; $("addGo").textContent = m ? "Save changes" : "Add item";
+      $("rmWrap").hidden = !(m && m.img);
+      if (m) { $("name").value = m.name; $("desc").value = m.desc || ""; $("name2").value = m.name2 || ""; $("desc2").value = m.desc2 || ""; $("price").value = m.price == null ? "" : m.price; $("cat").value = m.category; $("isveg").checked = !!m.veg; $("isspecial").checked = !!m.special; document.querySelectorAll("#tagBox input").forEach(i => i.checked = (m.tags || []).includes(i.value)) }
+      $("addDlg").showModal();
+    }
+    const openEdit = id => openForm(menu.find(m => m.id === id));
+    $("fab").onclick = () => openForm(null);
+    const upload = async f => { const blob = await shrink(f); const r = await fetch("/api/upload", { method: "POST", headers: { "Content-Type": "image/jpeg", "x-token": token }, body: blob }); const d = await r.json(); if (!r.ok) throw new Error(d.error || "Photo upload failed"); return d.url };
+    $("qp").onchange = async e => {
+      const f = e.target.files[0]; e.target.value = ""; if (!f || !pendingId) return;
+      try {
+        toast("Uploading photo…"); const url = await upload(f), it = menu.find(m => m.id === pendingId);
+        await api("/api/items/" + pendingId, "PUT", { img: url });
+        const others = menu.filter(m => m.id !== pendingId && m.category === it.category && !m.img);
+        if (others.length && confirm(`Use the same photo for the other ${others.length} item(s) in "${it.category}" that have no photo?`)) await Promise.all(others.map(m => api("/api/items/" + m.id, "PUT", { img: url })));
+        await loadMenu(); toast("Photo saved");
+      } catch (x) { toast(x.message) }
+    };
+    $("imgDlg").onclick = () => $("imgDlg").close();
+    $("addForm").onsubmit = async e => {
+      e.preventDefault(); $("addGo").disabled = true;
+      try {
+        const body = { name: $("name").value, desc: $("desc").value, name2: $("name2").value, desc2: $("desc2").value, price: $("price").value, category: $("cat").value, veg: $("isveg").checked, special: $("isspecial").checked, tags: [...document.querySelectorAll("#tagBox input:checked")].map(i => i.value) };
+        const f = $("photo").files[0];
+        if (f) body.img = await upload(f); else if ($("rmPhoto").checked) body.img = "";
+        if (editId) await api("/api/items/" + editId, "PUT", body); else await api("/api/items", "POST", body);
+        const was = editId; $("addDlg").close(); await loadMenu(); toast(was ? "Changes saved" : "Item added");
+      } catch (x) { $("amsg").textContent = x.message }
+      $("addGo").disabled = false;
+    };
+    $("list").onclick = async e => {
+      const ph = e.target.closest("img.ph");
+      if (ph) { $("bigImg").src = ph.src; $("bigImg").alt = ph.alt; $("bigCap").textContent = ph.alt; $("imgDlg").showModal(); return }
+      if (e.target.dataset.e) { openEdit(e.target.dataset.e); return }
+      if (e.target.dataset.p) { pendingId = e.target.dataset.p; $("qp").click(); return }
+      if (e.target.dataset.a) { setQty(e.target.dataset.a, 1); return }
+      if (e.target.dataset.q) { setQty(e.target.dataset.q, qty(e.target.dataset.q) + +e.target.dataset.d); return }
+      const t = e.target.dataset.t, d = e.target.dataset.d;
+      try {
+        if (t) { const was = menu.find(m => m.id === t); await api("/api/items/" + t, "PATCH"); await loadMenu(); toast(was && was.available ? "Marked sold out" : "Marked available") }
+        else if (d && confirm("Delete this item?")) { await api("/api/items/" + d, "DELETE"); await loadMenu(); toast("Item deleted") }
+      } catch (x) { toast(x.message); if (x.message === "unauthorized") { token = ""; sessionStorage.removeItem("tk"); render() } }
+    };
+    /* QR sheet */
+    $("qrBtn").onclick = async () => {
+      $("base").value = location.origin; $("qrView").hidden = false; $("qrSheet").innerHTML = "";
+      try { window._st = await api("/api/stats") } catch (e) { window._st = { total: 0, tables: {} } }
+      $("qrStat").textContent = `Total scans so far: ${_st.total}. Use your live website address before printing.`;
+      genQR();
+    };
+    function genQR() {
+      const base = $("base").value.trim().replace(/\/+$/, ""), n = Math.max(1, Math.min(60, +$("tn").value || 10));
+      if (!/^https?:\/\//.test(base)) { toast("Address must start with http:// or https://"); return }
+      const cells = [["", "Menu"], ...Array.from({ length: n }, (_, i) => [String(i + 1), "Table " + (i + 1)])];
+      $("qrSheet").innerHTML = "";
+      cells.forEach(([t, label]) => {
+        const c = document.createElement("div"); c.className = "qc";
+        const nm = document.createElement("strong"); nm.textContent = CFG.name || "Menu";
+        const box = document.createElement("div"); box.className = "qrbox";
+        const lb = document.createElement("strong"); lb.textContent = label;
+        const sc = document.createElement("small"); sc.className = "noprint"; sc.textContent = (t ? (_st.tables[t] || 0) : 0) + " scans";
+        const hint = document.createElement("small"); hint.textContent = "Scan to see the menu";
+        c.append(nm, box, lb, hint, t ? sc : document.createTextNode("")); $("qrSheet").append(c);
+        new QRCode(box, { text: base + "/" + (t ? "?table=" + t : ""), width: 150, height: 150, correctLevel: QRCode.CorrectLevel.M });
+      });
+    }
+    $("qrGen").onclick = genQR; $("qrPrint").onclick = () => print(); $("qrClose").onclick = () => { $("qrView").hidden = true };
+
+    (async () => {
+      CFG = await fetch("/api/config").then(r => r.json()).catch(() => ({}));
+      const name = CFG.name || "Jalandhar Dhabe Wale"; CUR = CFG.currency || "";
+      document.title = name + " – Menu";
+      $("title").setAttribute("aria-label", name);
+      let k = 0; $("title").innerHTML = name.split(" ").map(w => `<span class="w">${w.split("").map(c => `<span style="--i:${k++}">${esc(c)}</span>`).join("")}</span>`).join(" ");
+      $("tag").textContent = CFG.tagline || ""; setupCTA();
+      if (Array.isArray(CFG.ticker) && CFG.ticker.length) { const t = CFG.ticker.map(x => `<span>${esc(x)}</span>`).join(""); $("track").innerHTML = t + t + t + t; $("ticker").hidden = false }
+      addEventListener("scroll", () => $("bar").classList.toggle("stuck", scrollY > 260), { passive: true });
+      if (CFG.lang2) { $("langBtn").hidden = false; $("langBtn").textContent = CFG.lang2 }
+      if (TABLE) { $("tbl").hidden = false; $("tbl").textContent = "Table " + TABLE }
+      const ok = u => /^https?:\/\//.test(u || "");
+      $("foot").innerHTML = (CFG.phone ? `<a href="tel:${esc(CFG.phone.replace(/[^\d+]/g, ""))}">📞 ${esc(CFG.phone)}</a>` : "") + (CFG.location ? `<span class="loc">📍 ${esc(CFG.location)}</span>` : "") + (ok(CFG.googleReview) ? `<a href="${esc(CFG.googleReview)}" target="_blank" rel="noopener">★ Review us on Google</a>` : "") + (ok(CFG.instagram) ? `<a href="${esc(CFG.instagram)}" target="_blank" rel="noopener">Follow us on Instagram</a>` : "");
+      if (token) { try { await api("/api/check") } catch (e) { token = ""; sessionStorage.removeItem("tk") } }
+      if (!token && !sessionStorage.getItem("hit" + TABLE)) { sessionStorage.setItem("hit" + TABLE, 1); fetch("/api/hit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ table: TABLE }) }).catch(() => { }) }
+      loadMenu();
+    })();
+  </script>
+</body>
+
+</html>

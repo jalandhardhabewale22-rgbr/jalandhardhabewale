@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#10131b">
+    <title>Menu Admin · Dashboard</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b0e14;
+            --panel: #131823;
+            --panel2: #191f2c;
+            --line: #293142;
+            --text: #f4f6fb;
+            --muted: #9ba6b9;
+            --accent: #f6b83f;
+            --accent2: #ffd36d;
+            --green: #45d6a0;
+            --red: #ff7474;
+            --blue: #8caeff;
+            --shadow: 0 18px 55px #0005
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(ellipse at top left, #20283a 0, transparent 38%), var(--bg);
+            color: var(--text);
+            font: 15px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+            min-height: 100vh
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .shell {
+            max-width: 1180px;
+            margin: auto;
+            padding: 28px 20px 60px
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px
+        }
+
+        .logo {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), #f08c35);
+            color: #231605;
+            font-size: 24px;
+            box-shadow: 0 8px 26px #f6b83f2b
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--accent)
+        }
+
+        h1 {
+            font-size: clamp(23px, 4vw, 32px);
+            letter-spacing: -.04em;
+            margin: 1px 0 0
+        }
+
+        h2 {
+            font-size: 18px;
+            letter-spacing: -.02em;
+            margin: 0
+        }
+
+        .sub {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 10px 14px;
+            background: #ffffff06;
+            color: var(--text);
+            font-weight: 700;
+            transition: .18s
+        }
+
+        .btn:hover {
+            border-color: #65718a;
+            transform: translateY(-1px)
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            color: #211708;
+            border-color: var(--accent)
+        }
+
+        .btn.primary:hover {
+            background: var(--accent2)
+        }
+
+        .btn.danger {
+            color: #ff9999;
+            border-color: #66373d;
+            background: #ff74740a
+        }
+
+        .btn.small {
+            padding: 7px 10px;
+            font-size: 12px;
+            border-radius: 10px
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: wait;
+            transform: none
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 22px
+        }
+
+        .stat,
+        .panel {
+            background: linear-gradient(145deg, #171d29, #111620);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            box-shadow: var(--shadow)
+        }
+
+        .stat {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 650
+        }
+
+        .stat-value {
+            font-size: 29px;
+            font-weight: 800;
+            letter-spacing: -.05em;
+            margin-top: 3px
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: #f6b83f16;
+            color: var(--accent);
+            font-size: 20px
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 350px minmax(0, 1fr);
+            align-items: start;
+            gap: 18px
+        }
+
+        .panel {
+            padding: 20px;
+            min-width: 0
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px
+        }
+
+        .panel-head p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+            margin-bottom: 14px
+        }
+
+        .field label {
+            font-size: 12px;
+            font-weight: 750;
+            color: #cbd3e1
+        }
+
+        .field input,
+        .field textarea,
+        .field select,
+        .search {
+            width: 100%;
+            background: #0c1018;
+            border: 1px solid #30394b;
+            border-radius: 11px;
+            color: var(--text);
+            padding: 11px 12px;
+            outline: none;
+            transition: .18s
+        }
+
+        .field textarea {
+            min-height: 82px;
+            resize: vertical
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus,
+        .search:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px #f6b83f18
+        }
+
+        .two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+
+        .choice-row {
+            display: flex;
+            gap: 10px;
+            margin: 3px 0 16px
+        }
+
+        .choice {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            border: 1px solid var(--line);
+            border-radius: 11px;
+            padding: 10px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .choice input {
+            accent-color: var(--accent)
+        }
+
+        .photo-box {
+            border: 1px dashed #414b60;
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            background: #0c1018
+        }
+
+        .preview {
+            width: 64px;
+            height: 64px;
+            flex: none;
+            border-radius: 10px;
+            background: #202737;
+            object-fit: cover;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            overflow: hidden
+        }
+
+        .preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .photo-copy {
+            min-width: 0;
+            flex: 1
+        }
+
+        .photo-copy strong {
+            display: block;
+            font-size: 12px
+        }
+
+        .photo-copy small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px
+        }
+
+        .photo-copy input {
+            font-size: 11px;
+            width: 100%;
+            margin-top: 7px
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 9px
+        }
+
+        .form-actions .btn {
+            flex: 1
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .list-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px
+        }
+
+        .search {
+            max-width: 270px;
+            padding: 9px 12px
+        }
+
+        .filters {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-bottom: 15px
+        }
+
+        .filter {
+            border: 1px solid var(--line);
+            background: transparent;
+            color: var(--muted);
+            border-radius: 99px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        .filter.active {
+            background: #f6b83f18;
+            border-color: #9c742c;
+            color: var(--accent)
+        }
+
+        .items {
+            display: grid;
+            gap: 10px
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            border: 1px solid #293142;
+            background: #0e131c;
+            border-radius: 15px;
+            padding: 12px;
+            min-width: 0;
+            transition: .18s
+        }
+
+        .item:hover {
+            border-color: #48536a
+        }
+
+        .item.off {
+            opacity: .65
+        }
+
+        .item-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            flex: none;
+            overflow: hidden;
+            background: #1b2332;
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            color: #647087
+        }
+
+        .item-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .item-main {
+            min-width: 0;
+            flex: 1
+        }
+
+        .item-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            font-weight: 800
+        }
+
+        .item-meta {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+            overflow-wrap: anywhere
+        }
+
+        .price {
+            color: var(--accent);
+            font-weight: 800;
+            white-space: nowrap
+        }
+
+        .tag {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 99px;
+            background: #45d6a01a;
+            color: var(--green)
+        }
+
+        .tag.nonveg {
+            background: #ff74741a;
+            color: #ff9696
+        }
+
+        .tag.unavailable {
+            background: #8d96a51c;
+            color: #aeb7c7
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
+
+        .empty {
+            padding: 42px 15px;
+            text-align: center;
+            color: var(--muted);
+            border: 1px dashed var(--line);
+            border-radius: 15px
+        }
+
+        .empty strong {
+            display: block;
+            color: var(--text);
+            font-size: 15px;
+            margin-bottom: 4px
+        }
+
+        .login-wrap {
+            min-height: 75vh;
+            display: grid;
+            place-items: center
+        }
+
+        .login-card {
+            width: min(100%, 420px);
+            padding: 28px
+        }
+
+        .login-card .logo {
+            margin-bottom: 18px
+        }
+
+        .login-card h1 {
+            font-size: 27px
+        }
+
+        .login-card .field {
+            margin-top: 22px
+        }
+
+        .login-card .btn {
+            width: 100%;
+            padding: 12px
+        }
+
+        .notice {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 15px;
+            text-align: center
+        }
+
+        .msg {
+            font-size: 12px;
+            min-height: 18px;
+            color: var(--red);
+            margin-top: 9px
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translate(-50%, 18px);
+            opacity: 0;
+            pointer-events: none;
+            background: #e8fff5;
+            color: #103c2b;
+            border-radius: 12px;
+            padding: 12px 17px;
+            font-weight: 750;
+            font-size: 13px;
+            box-shadow: var(--shadow);
+            transition: .22s;
+            z-index: 20;
+            max-width: 90vw
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0)
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .mobile-note {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 13px
+        }
+
+        @media(max-width:850px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .form-panel {
+                order: 0
+            }
+
+            .list-panel {
+                order: 1
+            }
+
+            .stats {
+                gap: 9px
+            }
+
+            .stat {
+                padding: 14px
+            }
+
+            .stat-value {
+                font-size: 24px
+            }
+
+            .shell {
+                padding: 18px 13px 40px
+            }
+
+            .panel {
+                padding: 16px
+            }
+        }
+
+        @media(max-width:520px) {
+            .topbar {
+                align-items: flex-start
+            }
+
+            .topbar .btn {
+                padding: 9px 10px;
+                font-size: 12px
+            }
+
+            .brand {
+                gap: 10px
+            }
+
+            .logo {
+                width: 42px;
+                height: 42px;
+                border-radius: 13px
+            }
+
+            .stats {
+                grid-template-columns: repeat(3, minmax(0, 1fr))
+            }
+
+            .stat {
+                display: block;
+                padding: 12px 10px;
+                border-radius: 14px
+            }
+
+            .stat-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 15px;
+                margin-bottom: 7px
+            }
+
+            .stat-label {
+                font-size: 10px
+            }
+
+            .stat-value {
+                font-size: 22px
+            }
+
+            .list-head {
+                align-items: stretch;
+                flex-direction: column
+            }
+
+            .search {
+                max-width: none
+            }
+
+            .item {
+                gap: 9px;
+                padding: 9px
+            }
+
+            .item-photo {
+                width: 48px;
+                height: 48px
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 8px
+            }
+
+            .item {
+                flex-wrap: wrap
+            }
+
+            .item-main {
+                flex: 1 1 calc(100% - 70px)
+            }
+
+            .item-actions {
+                padding-left: 57px;
+                margin-top: -2px
+            }
+
+            .item-actions .btn {
+                flex: 1
+            }
+
+            .two {
+                gap: 8px
+            }
+        }
+
+        /* ---- Stats cards (icon badge + value + label) ---- */
+        .stats {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 22px
+        }
+
+        .stats .stat {
+            --c: var(--accent);
+            --cbg: #f6b83f1f;
+            --cbd: #f6b83f38;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 18px;
+            background: linear-gradient(150deg, #1a2130, #121723);
+            border: 1px solid var(--line);
+            transition: transform .2s, border-color .2s
+        }
+
+        .stats .stat::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--c), transparent 75%)
+        }
+
+        .stats .stat::after {
+            content: "";
+            position: absolute;
+            right: -34px;
+            top: -34px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--cbg), transparent 70%);
+            pointer-events: none
+        }
+
+        .stats .stat-green {
+            --c: var(--green);
+            --cbg: #45d6a026;
+            --cbd: #45d6a03d
+        }
+
+        .stats .stat-blue {
+            --c: var(--blue);
+            --cbg: #8caeff26;
+            --cbd: #8caeff3d
+        }
+
+        .stats .stat-icon {
+            position: relative;
+            z-index: 1;
+            width: 40px;
+            height: 40px;
+            margin: 0;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: var(--cbg);
+            border: 1px solid var(--cbd);
+            color: var(--c);
+            font-size: 0
+        }
+
+        .stats .stat-icon svg {
+            width: 21px;
+            height: 21px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .stats .stat-body {
+            position: relative;
+            z-index: 1;
+            min-width: 0
+        }
+
+        .stats .stat-value {
+            margin: 0;
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            font-variant-numeric: tabular-nums
+        }
+
+        .stats .stat-label {
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: .01em
+        }
+
+        @media(hover:hover) {
+            .stats .stat:hover {
+                transform: translateY(-2px);
+                border-color: var(--cbd)
+            }
+        }
+
+        @media(min-width:760px) {
+            .stats .stat {
+                flex-direction: row;
+                align-items: center;
+                gap: 16px;
+                padding: 18px 20px
+            }
+
+            .stats .stat-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px
+            }
+
+            .stats .stat-icon svg {
+                width: 24px;
+                height: 24px
+            }
+
+            .stats .stat-value {
+                font-size: 32px
+            }
+
+            .stats .stat-label {
+                margin-top: 5px;
+                font-size: 13px
+            }
+        }
+
+        @media(max-width:520px) {
+            .stats {
+                gap: 8px
+            }
+
+            .stats .stat {
+                padding: 12px 11px;
+                gap: 10px;
+                border-radius: 15px
+            }
+
+            .stats .stat-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px
+            }
+
+            .stats .stat-icon svg {
+                width: 18px;
+                height: 18px
+            }
+
+            .stats .stat-value {
+                font-size: 24px
+            }
+
+            .stats .stat-label {
+                font-size: 11px
+            }
+        }
+
+        @media(max-width:340px) {
+            .stats .stat-label {
+                font-size: 10px
+            }
+        }
+
+        /* ---- Dish type selector: one clean row per option, clear selected state ---- */
+        .choice-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 4px 0 16px
+        }
+
+        .choice-row .choice {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: none;
+            min-height: 48px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #0d1119;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: border-color .2s, background .2s, color .2s
+        }
+
+        .choice-row .choice:hover {
+            border-color: #3d4964
+        }
+
+        .choice-row .choice input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 1px;
+            height: 1px;
+            margin: 0;
+            padding: 0;
+            border: 0
+        }
+
+        .choice .vmark {
+            flex: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-radius: 4px;
+            position: relative
+        }
+
+        .choice .vmark::after {
+            content: "";
+            position: absolute;
+            inset: 2.5px;
+            border-radius: 50%;
+            background: currentColor
+        }
+
+        .choice .vmark.v {
+            color: var(--green)
+        }
+
+        .choice .vmark.n {
+            color: var(--red)
+        }
+
+        .choice .vtext {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .choice-row .choice::after {
+            content: "";
+            flex: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #3d4964;
+            transition: border-color .2s, background .2s
+        }
+
+        .choice-row .choice:has(#isveg:checked) {
+            color: var(--text);
+            border-color: var(--green);
+            background: #45d6a014
+        }
+
+        .choice-row .choice:has(#isveg:checked)::after {
+            border-color: var(--green);
+            background: radial-gradient(circle, var(--green) 0 36%, transparent 40%)
+        }
+
+        .choice-row .choice:has(#isnonveg:checked) {
+            color: var(--text);
+            border-color: var(--red);
+            background: #ff74741a
+        }
+
+        .choice-row .choice:has(#isnonveg:checked)::after {
+            border-color: var(--red);
+            background: radial-gradient(circle, var(--red) 0 36%, transparent 40%)
+        }
+
+        .choice-row .choice:has(input:focus-visible) {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px
+        }
+
+        @media(max-width:380px) {
+            .choice-row .choice {
+                gap: 8px;
+                padding: 10px
+            }
+
+            .choice-row .choice::after {
+                display: none
+            }
+        }
+
+        /* ---- Mobile header (phones only; desktop is untouched) ---- */
+        @media(max-width:560px) {
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                margin-bottom: 18px
+            }
+
+            .topbar .brand {
+                gap: 12px;
+                align-items: center
+            }
+
+            .topbar .brand .logo {
+                flex: none;
+                width: 46px;
+                height: 46px;
+                border-radius: 14px;
+                font-size: 22px
+            }
+
+            .topbar .brand>div:last-child {
+                min-width: 0
+            }
+
+            .topbar .eyebrow {
+                font-size: 10px;
+                letter-spacing: .14em
+            }
+
+            .topbar h1 {
+                font-size: 25px;
+                line-height: 1.1;
+                white-space: nowrap;
+                margin-top: 3px
+            }
+
+            .topbar .sub {
+                font-size: 12.5px;
+                line-height: 1.4;
+                margin-top: 4px
+            }
+
+            .topbar .top-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px
+            }
+
+            .topbar .top-actions .btn {
+                min-height: 44px;
+                padding: 11px 12px;
+                font-size: 13.5px;
+                white-space: nowrap
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loginScreen" class="login-wrap">
+        <section class="panel login-card">
+            <div class="logo">✦</div>
+            <div class="eyebrow">Restaurant management</div>
+            <h1>Welcome back</h1>
+            <p class="sub">Sign in to manage your menu, prices and availability.</p>
+            <form id="loginForm">
+                <div class="field"><label for="pw">Admin password</label><input id="pw" type="password"
+                        placeholder="Enter your password" autocomplete="current-password" required></div><button
+                    class="btn primary" id="loginBtn" type="submit">Unlock dashboard <span
+                        aria-hidden="true">→</span></button>
+                <div class="msg" id="lmsg" role="alert"></div>
+            </form>
+            <div class="notice">Private access · Menu administration</div>
+        </section>
+    </div>
+    <div id="app" class="shell hidden">
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">✦</div>
+                <div>
+                    <div class="eyebrow">Restaurant management</div>
+                    <h1>Menu dashboard</h1>
+                    <div class="sub">Manage dishes, prices and availability in one place.</div>
+                </div>
+            </div>
+            <div class="top-actions"><button class="btn" id="viewMenu" type="button">↗ View menu</button><button
+                    class="btn" id="logout" type="button">Log out</button></div>
+        </header>
+        <section class="stats" aria-label="Menu summary">
+            <div class="stat stat-gold">
+                <div class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+                        <path d="M7 2v20" />
+                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+                    </svg></div>
+                <div class="stat-body">
+                    <div class="stat-value" id="totalCount">&mdash;</div>
+                    <div class="stat-label">Total items</div>
+                </div>
+            </div>
+            <div class="stat stat-green">
+                <div class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="m8.5 12.5 2.5 2.5 4.5-5" />
+                    </svg></div>
+                <div class="stat-body">
+                    <div class="stat-value" id="availableCount">&mdash;</div>
+                    <div class="stat-label">Available</div>
+                </div>
+            </div>
+            <div class="stat stat-blue">
+                <div class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    </svg></div>
+                <div class="stat-body">
+                    <div class="stat-value" id="categoryCount">&mdash;</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            </div>
+        </section>
+        <div class="layout">
+            <section class="panel form-panel">
+                <div class="panel-head">
+                    <div>
+                        <h2 id="formTitle">＋ Add a dish</h2>
+                        <p>Add a new item to your customer menu.</p>
+                    </div>
+                </div>
+                <form id="itemForm">
+                    <div class="field"><label for="name">Dish name *</label><input id="name" maxlength="80"
+                            placeholder="e.g. Paneer Tikka" required></div>
+                    <div class="field"><label for="desc">Description</label><textarea id="desc" maxlength="200"
+                            placeholder="Short description or ingredients"></textarea></div>
+                    <div class="two">
+                        <div class="field"><label for="price">Price <span id="curLabel"></span> *</label><input
+                                id="price" type="number" min="0" max="1000000" step="0.01" placeholder="180" required>
+                        </div>
+                        <div class="field"><label for="cat">Category *</label><input id="cat" list="cats" maxlength="40"
+                                placeholder="Main course" required><datalist id="cats"></datalist></div>
+                    </div>
+                    <div class="field"><label>Dish type</label>
+                        <div class="choice-row"><label class="choice"><input type="radio" name="foodType" id="isveg"
+                                    value="veg" checked><span class="vmark v" aria-hidden="true"></span><span
+                                    class="vtext">Vegetarian</span></label><label class="choice"><input type="radio"
+                                    name="foodType" id="isnonveg" value="nonveg"><span class="vmark n"
+                                    aria-hidden="true"></span><span class="vtext">Non-veg</span></label></div>
+                    </div>
+                    <div class="field"><label>Dish photo</label>
+                        <div class="photo-box">
+                            <div class="preview" id="photoPreview">＋</div>
+                            <div class="photo-copy"><strong>Upload food photo</strong><small>Choose an image; it will be
+                                    resized before upload.</small><input type="file" id="photo"
+                                    accept="image/jpeg,image/png,image/webp"></div>
+                        </div>
+                    </div>
+                    <div class="form-actions"><button class="btn primary" id="saveItem" type="submit">＋ Add
+                            item</button><button class="btn hidden" id="cancelEdit" type="button">Cancel</button></div>
+                    <div class="msg" id="amsg" role="alert"></div>
+                </form>
+                <div class="mobile-note">Changes are saved to your menu as soon as you save an item.</div>
+            </section>
+            <section class="panel list-panel">
+                <div class="list-head">
+                    <div>
+                        <h2>Your menu items</h2>
+                        <p class="sub" id="listSubtitle">Loading menu…</p>
+                    </div><input class="search" id="search" type="search" placeholder="⌕ Search dishes…"
+                        aria-label="Search menu items">
+                </div>
+                <div class="filters"><button class="filter active" data-filter="all">All items</button><button
+                        class="filter" data-filter="available">Available</button><button class="filter"
+                        data-filter="unavailable">Sold out</button></div>
+                <div class="items" id="list">
+                    <div class="empty">Loading your menu…</div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script>
+        const $ = id => document.getElementById(id); const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        let CUR = '', token = sessionStorage.getItem('tk') || '', items = [], editingId = null, uploadedImage = '', filter = 'all', toastTimer;
+        const api = async (url, method = 'GET', body) => { const opts = { method, headers: { 'x-token': token } }; if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body) } const r = await fetch(url, opts); let d = {}; try { d = await r.json() } catch { } if (!r.ok) throw new Error(d.error || `Request failed (${r.status})`); return d };
+        function notify(msg) { $('toast').textContent = msg; $('toast').classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('show'), 2600) }
+        function setPhoto(url) { uploadedImage = url || ''; $('photoPreview').innerHTML = url ? `<img src="${esc(url)}" alt="Selected dish photo">` : '＋' }
+        function resetForm() { editingId = null; $('itemForm').reset(); $('isveg').checked = true; setPhoto(''); $('photo').value = ''; $('formTitle').textContent = '＋ Add a dish'; $('saveItem').textContent = '＋ Add item'; $('cancelEdit').classList.add('hidden'); $('amsg').textContent = '' }
+        function updateStats() { $('totalCount').textContent = items.length; $('availableCount').textContent = items.filter(x => x.available !== false).length; $('categoryCount').textContent = new Set(items.map(x => x.category).filter(Boolean)).size; $('listSubtitle').textContent = `${items.length} item${items.length === 1 ? '' : 's'} · changes appear on your customer menu`; $('cats').innerHTML = [...new Set(items.map(x => x.category).filter(Boolean))].sort().map(c => `<option value="${esc(c)}"></option>`).join('') }
+        function render() { updateStats(); const q = $('search').value.trim().toLowerCase(); const filtered = items.filter(x => { const ok = filter === 'all' || (filter === 'available' ? x.available !== false : x.available === false); return ok && `${x.name || ''} ${x.category || ''} ${x.desc || ''}`.toLowerCase().includes(q) }); $('list').innerHTML = filtered.length ? filtered.map(x => `<article class="item ${x.available === false ? 'off' : ''}"><div class="item-photo">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : '✧'}</div><div class="item-main"><div class="item-title">${esc(x.name)} <span class="tag ${x.veg ? '' : 'nonveg'}">${x.veg ? 'VEG' : 'NON-VEG'}</span>${x.available === false ? '<span class="tag unavailable">SOLD OUT</span>' : ''}</div><div class="item-meta">${esc(x.category || 'Uncategorised')} · <span class="price">${x.price == null ? '—' : esc(CUR) + (Number.isInteger(+x.price) ? esc(x.price) : (+x.price).toFixed(2))}</span>${x.desc ? `<br>${esc(x.desc)}` : ''}</div></div><div class="item-actions"><button class="btn small" data-action="toggle" data-id="${esc(x.id)}">${x.available === false ? '✓ Available' : 'Sold out'}</button><button class="btn small" data-action="edit" data-id="${esc(x.id)}">✎ Edit</button><button class="btn small danger" data-action="delete" data-id="${esc(x.id)}">Delete</button></div></article>`).join('') : '<div class="empty"><strong>No dishes found</strong>Try another search or change the filter.</div>' }
+        async function load() { try { await api('/api/check'); const m = await api('/api/menu'); items = Array.isArray(m) ? m : []; $('loginScreen').classList.add('hidden'); $('app').classList.remove('hidden'); render() } catch (e) { if (token) { token = ''; sessionStorage.removeItem('tk') } $('app').classList.add('hidden'); $('loginScreen').classList.remove('hidden'); if (e.message !== 'Session expired. Please log in again.' && e.message !== 'unauthorized') $('lmsg').textContent = '' } }
+        $('loginForm').addEventListener('submit', async e => { e.preventDefault(); $('loginBtn').disabled = true; $('lmsg').textContent = ''; try { const d = await api('/api/login', 'POST', { password: $('pw').value }); token = d.token; sessionStorage.setItem('tk', token); $('pw').value = ''; await load() } catch (err) { $('lmsg').textContent = err.message } finally { $('loginBtn').disabled = false } });
+        async function resizeJpeg(file) { const image = await createImageBitmap(file); const scale = Math.min(1, 1400 / Math.max(image.width, image.height)); const canvas = document.createElement('canvas'); canvas.width = Math.round(image.width * scale); canvas.height = Math.round(image.height * scale); canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height); return await new Promise((resolve, reject) => canvas.toBlob(b => b ? resolve(b) : reject(new Error('Could not process this image')), 'image/jpeg', .84)) }
+        $('photo').addEventListener('change', async () => { const file = $('photo').files[0]; if (!file) return; try { if (file.size > 12 * 1024 * 1024) throw new Error('Choose an image smaller than 12 MB.'); const blob = await resizeJpeg(file); const preview = URL.createObjectURL(blob); $('photoPreview').innerHTML = `<img src="${preview}" alt="Photo preview">`; uploadedImage = ''; } catch (e) { $('amsg').textContent = e.message; $('photo').value = '' } });
+        async function uploadPhoto() { const file = $('photo').files[0]; if (!file) return uploadedImage; const blob = await resizeJpeg(file); const r = await fetch('/api/upload', { method: 'POST', headers: { 'x-token': token, 'Content-Type': 'image/jpeg' }, body: blob }); let d = {}; try { d = await r.json() } catch { } if (!r.ok) throw new Error(d.error || 'Photo upload failed'); return d.url }
+        $('itemForm').addEventListener('submit', async e => { e.preventDefault(); const name = $('name').value.trim(), category = $('cat').value.trim(), price = $('price').value; if (!name || !category || price === '') { $('amsg').textContent = 'Please fill in name, price and category.'; return } const btn = $('saveItem'); btn.disabled = true; $('amsg').textContent = ''; try { const img = await uploadPhoto(); const body = { name, desc: $('desc').value.trim(), price, category, veg: $('isveg').checked, img }; if (editingId) { await api('/api/items/' + encodeURIComponent(editingId), 'PUT', body); notify('Dish updated successfully') } else { await api('/api/items', 'POST', body); notify('Dish added to your menu') } resetForm(); items = await api('/api/menu'); render() } catch (err) { $('amsg').textContent = err.message } finally { btn.disabled = false } });
+        $('cancelEdit').addEventListener('click', resetForm); $('search').addEventListener('input', render); document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => { filter = b.dataset.filter; document.querySelectorAll('[data-filter]').forEach(x => x.classList.toggle('active', x === b)); render() }));
+        $('list').addEventListener('click', async e => { const b = e.target.closest('button[data-action]'); if (!b) return; const item = items.find(x => String(x.id) === b.dataset.id); if (!item) return; try { b.disabled = true; if (b.dataset.action === 'toggle') { await api('/api/items/' + encodeURIComponent(item.id), 'PATCH'); notify(item.available === false ? 'Item marked available' : 'Item marked sold out') } else if (b.dataset.action === 'delete') { if (!confirm(`Delete “${item.name}” from the menu? This cannot be undone.`)) return; await api('/api/items/' + encodeURIComponent(item.id), 'DELETE'); if (editingId === item.id) resetForm(); notify('Dish deleted') } else if (b.dataset.action === 'edit') { editingId = item.id; $('name').value = item.name || ''; $('desc').value = item.desc || ''; $('price').value = item.price ?? ''; $('cat').value = item.category || ''; $('isveg').checked = item.veg !== false; $('isnonveg').checked = item.veg === false; $('photo').value = ''; setPhoto(item.img || ''); $('formTitle').textContent = '✎ Edit dish'; $('saveItem').textContent = 'Save changes'; $('cancelEdit').classList.remove('hidden'); $('amsg').textContent = ''; document.querySelector('.form-panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); return } items = await api('/api/menu'); render() } catch (err) { notify(err.message) } finally { b.disabled = false } });
+        $('logout').addEventListener('click', async () => { try { if (token) await fetch('/api/logout', { method: 'POST', headers: { 'x-token': token } }) } catch { } sessionStorage.removeItem('tk'); token = ''; items = []; resetForm(); $('app').classList.add('hidden'); $('loginScreen').classList.remove('hidden'); $('pw').focus() }); $('viewMenu').addEventListener('click', () => location.href = '/');
+        fetch('/api/config').then(r => r.json()).then(c => { CUR = c.currency || ''; const l = $('curLabel'); if (l) l.textContent = CUR ? '(' + CUR + ')' : ''; if (items.length) render() }).catch(() => { });
+        if (token) load(); else $('pw').focus();
+    </script>
+</body>
+
+</html>
